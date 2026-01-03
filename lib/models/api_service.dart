@@ -5,7 +5,8 @@ import 'invoice.dart';
 import 'invoice_item.dart';
 
 class ApiService {
-  final String baseUrl = "https://supermarket-backend-85ii.onrender.com";
+  // final String baseUrl = "https://supermarket-backend-85ii.onrender.com";
+  final String baseUrl = "http://localhost:5000";
 
   // GET /products - Get all products
   Future<List<Product>> getProducts() async {
@@ -14,6 +15,8 @@ class ApiService {
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
       return data.map((json) => Product.fromJson(json)).toList();
+    } else if (response.statusCode == 204) {
+      return [];
     } else {
       throw Exception('Failed to load products');
     }
@@ -55,9 +58,10 @@ class ApiService {
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      return Product.fromJson(jsonDecode(response.body));
+      return product;
     } else {
-      throw Exception('Failed to create product');
+      final errorBody = response.body;
+      throw Exception('Failed to create product: $errorBody');
     }
   }
 
@@ -70,18 +74,26 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      return Product.fromJson(jsonDecode(response.body));
+      return product;
     } else {
-      throw Exception('Failed to update product');
+      final errorBody = response.body;
+      throw Exception('Failed to update product: $errorBody');
     }
   }
 
   // DELETE /products/:id - Delete product
+  // In api_service.dart, update the deleteProduct method:
   Future<void> deleteProduct(String id) async {
+    print('Attempting to delete product with ID: $id');
     final response = await http.delete(Uri.parse('$baseUrl/products/$id'));
 
+    print('Delete response status: ${response.statusCode}');
+    print('Delete response body: ${response.body}');
+
     if (response.statusCode != 200 && response.statusCode != 204) {
-      throw Exception('Failed to delete product');
+      throw Exception(
+        'Failed to delete product: ${response.statusCode} - ${response.body}',
+      );
     }
   }
 
@@ -94,6 +106,8 @@ class ApiService {
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
       return data.map((json) => Invoice.fromJson(json)).toList();
+    } else if (response.statusCode == 204) {
+      return [];
     } else {
       throw Exception('Failed to load invoices');
     }
@@ -136,7 +150,13 @@ class ApiService {
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      return Invoice.fromJson(jsonDecode(response.body));
+      final responseData = jsonDecode(response.body);
+      return Invoice(
+        id: responseData['id'].toString(),
+        invoiceNumber: invoice.invoiceNumber,
+        total: invoice.total,
+        createdAt: invoice.createdAt,
+      );
     } else {
       throw Exception(
         'Failed to create invoice: ${response.statusCode} - ${response.body}',
@@ -153,9 +173,15 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      return Invoice.fromJson(jsonDecode(response.body));
+      return Invoice(
+        id: id,
+        invoiceNumber: invoice.invoiceNumber,
+        total: invoice.total,
+        createdAt: invoice.createdAt,
+      );
     } else {
-      throw Exception('Failed to update invoice');
+      final errorBody = response.body;
+      throw Exception('Failed to update invoice: $errorBody');
     }
   }
 
@@ -168,7 +194,6 @@ class ApiService {
     }
   }
 
-
   // GET /invoice-items - Get all invoice items
   Future<List<InvoiceItem>> getInvoiceItems() async {
     final response = await http.get(Uri.parse('$baseUrl/invoice-items'));
@@ -176,6 +201,8 @@ class ApiService {
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
       return data.map((json) => InvoiceItem.fromJson(json)).toList();
+    } else if (response.statusCode == 204) {
+      return [];
     } else {
       throw Exception('Failed to load invoice items');
     }
@@ -217,7 +244,16 @@ class ApiService {
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      return InvoiceItem.fromJson(jsonDecode(response.body));
+      final responseData = jsonDecode(response.body);
+      return InvoiceItem(
+        id: responseData['id'].toString(),
+        invoiceId: item.invoiceId,
+        barcode: item.barcode,
+        nameSnapshot: item.nameSnapshot,
+        priceSnapshot: item.priceSnapshot,
+        qty: item.qty,
+        lineTotal: item.lineTotal,
+      );
     } else {
       throw Exception(
         'Failed to create invoice item: ${response.statusCode} - ${response.body}',
@@ -234,9 +270,18 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      return InvoiceItem.fromJson(jsonDecode(response.body));
+      return InvoiceItem(
+        id: id,
+        invoiceId: item.invoiceId,
+        barcode: item.barcode,
+        nameSnapshot: item.nameSnapshot,
+        priceSnapshot: item.priceSnapshot,
+        qty: item.qty,
+        lineTotal: item.lineTotal,
+      );
     } else {
-      throw Exception('Failed to update invoice item');
+      final errorBody = response.body;
+      throw Exception('Failed to update invoice item: $errorBody');
     }
   }
 

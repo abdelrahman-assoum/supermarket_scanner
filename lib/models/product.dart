@@ -1,11 +1,12 @@
 class Product {
-  final String barcode; 
+  final String barcode;
   final String name;
   final double price;
   final int stock;
   final String category;
   final String description;
   final String? photoUrl;
+  final bool isActive;
 
   Product({
     required this.barcode,
@@ -15,11 +16,12 @@ class Product {
     required this.category,
     required this.description,
     this.photoUrl,
+    this.isActive = true,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'id': barcode, // Backend expects 'id' field
+      'id': barcode,
       'name': name,
       'price': price,
       'stock': stock,
@@ -40,6 +42,7 @@ class Product {
       photoUrl: ((json['photoUrl'] ?? '') as String).trim().isEmpty
           ? null
           : (json['photoUrl'] as String),
+      isActive: json['isActive'] == 1 || json['isActive'] == true,
     );
   }
 }
