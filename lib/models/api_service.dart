@@ -5,8 +5,8 @@ import 'invoice.dart';
 import 'invoice_item.dart';
 
 class ApiService {
-  // final String baseUrl = "https://supermarket-backend-85ii.onrender.com";
-  final String baseUrl = "http://localhost:5000";
+  final String baseUrl = "https://supermarket-backend-85ii.onrender.com";
+  // final String baseUrl = "http://localhost:5000";
 
   // GET /products - Get all products
   Future<List<Product>> getProducts() async {
