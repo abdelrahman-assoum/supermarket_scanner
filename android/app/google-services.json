@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "688031567616",
+    "project_id": "supermarket-scanner-44f31",
+    "storage_bucket": "supermarket-scanner-44f31.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:688031567616:android:883f335762f4406c1b6de5",
+        "android_client_info": {
+          "package_name": "com.example.supermarket_scanner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsNIa5_mBFh_br4Z4rrghUyGU9MXFSUeM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
